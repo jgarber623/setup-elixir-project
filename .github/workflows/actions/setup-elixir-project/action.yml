@@ -31,18 +31,18 @@ runs:
         echo "elixir-version=${elixir_version}" >> $GITHUB_OUTPUT
       shell: bash
     - name: Set Erlang/OTP version
-      id: set-erlang-version
+      id: set-otp-version
       run: |
-        erlang_version="${{ inputs.erlang-version }}"
-        if [ erlang_version == "" ]; then erlang_version="$(grep -oP "^erlang\s\K(.+)$" .tool-versions)"; fi
-        echo "erlang-version=${erlang_version}" >> $GITHUB_OUTPUT
+        otp_version="${{ inputs.otp-version }}"
+        if [ otp_version == "" ]; then otp_version="$(grep -oP "^erlang\s\K(.+)$" .tool-versions)"; fi
+        echo "otp-version=${otp_version}" >> $GITHUB_OUTPUT
       shell: bash
     - name: Install Erlang/OTP and Elixir
       uses: erlef/setup-beam@v1
       id: setup-beam
       with:
         elixir-version: ${{ steps.set-elixir-version.outputs.elixir-version }}
-        otp-version: ${{ steps.set-erlang-version.outputs.erlang-version }}
+        otp-version: ${{ steps.set-otp-version.outputs.otp-version }}
         version-type: strict
     - name: Install Hex package manager
       if: inputs.install-hex == 'true'
