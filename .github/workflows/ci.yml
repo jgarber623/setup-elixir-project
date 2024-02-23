@@ -7,4 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: "./.github/workflows/actions/setup-elixir-project"
+      - uses: .github/workflows/actions/setup-elixir-project
+        with:
+          elixir-version: "1.16.1"
+          otp-version: "26.2.2"
