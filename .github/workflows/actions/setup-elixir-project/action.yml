@@ -31,13 +31,18 @@ runs:
         otp-version: ${{ inputs.otp-version }}
     - name: Install Hex package manager
       run: mix local.hex --force
+      shell: sh
       if: inputs.install-hex == 'true'
     - name: Install Rebar build tool
       run: mix local.rebar --force
+      shell: sh
       if: inputs.install-rebar == 'true'
     - name: Get out-of-date project dependencies
       run: mix deps.get
+      shell: sh
     - name: Compile project dependencies
       run: mix loadpaths
+      shell: sh
     - name: Compile application
       run: mix compile
+      shell: sh
