@@ -23,26 +23,35 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Set Elixir version
+      id: set-elixir-version
+      run: |
+        if [ "${{ inputs.elixir-version }}" == "" ]; then
+          echo "elixir-version=99.99" >> $GITHUB_OUTPUT
+        else
+          echo "elixir-version=${{ inputs.elixir-version }}" >> $GITHUB_OUTPUT
+        fi
     - name: Install Erlang/OTP and Elixir
       uses: erlef/setup-beam@v1
       id: setup-beam
       with:
-        elixir-version: ${{ inputs.elixir-version }}
+        elixir-version: ${{ steps.set-elixir-version.outputs.elixir-version }}
         otp-version: ${{ inputs.otp-version }}
+        version-type: strict
     - name: Install Hex package manager
-      run: mix local.hex --force
-      shell: sh
       if: inputs.install-hex == 'true'
+      run: mix local.hex --force
+      shell: bash
     - name: Install Rebar build tool
-      run: mix local.rebar --force
-      shell: sh
       if: inputs.install-rebar == 'true'
+      run: mix local.rebar --force
+      shell: bash
     - name: Get out-of-date project dependencies
       run: mix deps.get
-      shell: sh
+      shell: bash
     - name: Compile project dependencies
       run: mix loadpaths
-      shell: sh
+      shell: bash
     - name: Compile application
       run: mix compile
-      shell: sh
+      shell: bash
