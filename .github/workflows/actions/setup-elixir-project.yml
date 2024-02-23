@@ -1,0 +1,43 @@
+name: Setup Elixir Project
+description: >-
+  Install Erlang/OTP and Elixir (and optionally Hex and Rebar); fetch, cache,
+  and compile dependencies; and build and cache the app.
+inputs:
+  elixir-version:
+    description: Elixir version to install. Reads from `.tool-versions` if unset.
+  otp-version:
+    description: Erlang/OTP version to install. Reads from `.tool-versions` if unset.
+  install-hex:
+    description: Install Hex using `mix local.hex`.
+    default: true
+  install-rebar:
+    description: Install Rebar using `mix local.rebar`.
+    default: true
+outputs:
+  otp-version:
+    description: Exact Erlang/OTP version installed.
+    value: ${{ steps.setup-beam.outputs.otp-version }}
+  elixir-version:
+    description: Exact Elixir version installed.
+    value: ${{ steps.setup-beam.outputs.elixir-version }}
+runs:
+  using: composite
+  steps:
+    - name: Install Erlang/OTP and Elixir
+      uses: erlef/setup-beam@v1
+      id: setup-beam
+      with:
+        elixir-version: ${{ inputs.elixir-version }}
+        otp-version: ${{ inputs.otp-version }}
+    - name: Install Hex package manager
+      run: mix local.hex --force
+      if: inputs.install-hex == 'true'
+    - name: Install Rebar build tool
+      run: mix local.rebar --force
+      if: inputs.install-rebar == 'true'
+    - name: Get out-of-date project dependencies
+      run: mix deps.get
+    - name: Compile project dependencies
+      run: mix loadpaths
+    - name: Compile application
+      run: mix compile
