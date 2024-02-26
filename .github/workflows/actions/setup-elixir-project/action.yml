@@ -52,7 +52,7 @@ runs:
     - name: Set shared cache key
       id: set-shared-cache-key
       run: |
-        echo "shared-cache-key=${{ inputs.cache-key }}-${{ runner.os }}-${{ steps.set-elixir-version.outputs.otp-version }}-${{ steps.set-otp-version.outputs.elixir-version }}" >> $GIHUB_OUTPUT
+        echo "shared-cache-key=${{ inputs.cache-key }}-${{ runner.os }}-${{ steps.set-elixir-version.outputs.otp-version }}-${{ steps.set-otp-version.outputs.elixir-version }}" >> $GITHUB_OUTPUT
       shell: bash
     - name: Restore application build cache
       uses: actions/cache@v4
