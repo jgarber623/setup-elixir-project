@@ -52,27 +52,27 @@ runs:
     - name: Set shared cache key
       id: set-shared-cache-key
       run: |
-        echo "shared-cache-key=${{ inputs.cache-key }}-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}" >> $GIHUB_OUTPUT
+        echo "shared-cache-key=${{ inputs.cache-key }}-${{ runner.os }}-${{ steps.set-elixir-version.outputs.otp-version }}-${{ steps.set-otp-version.outputs.elixir-version }}" >> $GIHUB_OUTPUT
       shell: bash
     - name: Restore application build cache
       uses: actions/cache@v4
       with:
         path: _build/${{env.MIX_ENV}}
-        key: build-${{ steps.set-shared-cache-key.shared-cache-key }}-${{ env.MIX_ENV }}-${{ hashFiles('**/mix.lock') }}
+        key: build-${{ steps.set-shared-cache-key.outputs.shared-cache-key }}-${{ env.MIX_ENV }}-${{ hashFiles('**/mix.lock') }}
         restore-keys: |
           build-${{ steps.set-shared-cache-name.shared-cache-key-name }}-${{ env.MIX_ENV }}-
     - name: Restore project dependencies cache
       uses: actions/cache@v4
       with:
         path: deps
-        key: deps-${{ steps.set-shared-cache-key.shared-cache-key }}-${{ hashFiles('**/mix.lock') }}
+        key: deps-${{ steps.set-shared-cache-key.outputs.shared-cache-key }}-${{ hashFiles('**/mix.lock') }}
         restore-keys: |
           deps-${{ steps.set-shared-cache-name.shared-cache-key-name }}-
     - name: Restore Hex package manager cache
       uses: actions/cache@v4
       with:
         path: ~/.hex
-        key: hex-${{ steps.set-shared-cache-key.shared-cache-key }}-${{ hashFiles('**/mix.lock') }}
+        key: hex-${{ steps.set-shared-cache-key.outputs.shared-cache-key }}-${{ hashFiles('**/mix.lock') }}
         restore-keys: |
           hex-${{ steps.set-shared-cache-name.shared-cache-key-name }}-
     - name: Install Hex package manager
