@@ -2,17 +2,28 @@ name: CI
 
 on: [push]
 
+permissions:
+  contents: read
+
 jobs:
   test-defaults:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/workflows/actions/setup-elixir-project
+      - uses: ./
+      - name: Check Erlang and Elixir versions
+        run: |
+          elixir --version | grep 'Erlang/OTP 26'
+          elixir --version | grep 'Elixir 1.16.1'
   test-inputs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/workflows/actions/setup-elixir-project
+      - uses: ./
         with:
-          elixir-version: "1.16.1"
-          otp-version: "26.2.2"
+          elixir-version: "1.15"
+          otp-version: "25"
+      - name: Check Erlang and Elixir versions
+        run: |
+          elixir --version | grep 'Erlang/OTP 25'
+          elixir --version | grep 'Elixir 1.15'
