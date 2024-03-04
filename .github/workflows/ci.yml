@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./
+      - uses: ./.github/workflows/actions/setup-elixir-project
       - name: Check Erlang and Elixir versions
         run: |
           elixir --version | grep 'Erlang/OTP 26'
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./
+      - uses: ./.github/workflows/actions/setup-elixir-project
         with:
           elixir-version: "1.15"
           otp-version: "25"
